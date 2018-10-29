@@ -1,5 +1,6 @@
 package lambdas;
 
+@FunctionalInterface
 public interface TwoStringPred {
     static String betterString(String a, String b, TwoStringPred comparator) {
         if (comparator.better(a, b)) {
