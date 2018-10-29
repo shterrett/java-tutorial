@@ -2,6 +2,7 @@ package lambdas;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -28,6 +29,18 @@ public class Main {
 
         System.out.format("Word lengths: %s%n",
                 transform(Arrays.asList(WORDS), String::length));
+
+        System.out.format("First word with 5 letters and an h: %s%n",
+                testMultiPreds(Arrays.asList(WORDS),
+                                allPassPredicate(w -> w.length() == 5, w -> w.contains("h"))
+                        )
+                );
+
+        System.out.format("First word with either 5 letters or an e: %s%n",
+                testMultiPreds(Arrays.asList(WORDS),
+                        anyPassPredicate(w -> w.length() == 5, w -> w.contains("y"))
+                )
+        );
     }
 
     private static void sorting() {
@@ -64,5 +77,25 @@ public class Main {
         return xs.stream()
                 .map(f)
                 .collect(Collectors.toList());
+    }
+
+    private static <T> Predicate<T> allPassPredicate(Predicate<T>... preds) {
+        return (T test) ->
+                Arrays.asList(preds)
+                        .stream()
+                        .allMatch(p -> p.test(test));
+    }
+
+    private static <T> Predicate<T> anyPassPredicate(Predicate<T>... preds) {
+        return (T test) ->
+                Arrays.asList(preds)
+                .stream()
+                .anyMatch(p -> p.test(test));
+    }
+
+    private static <T> Optional<T> testMultiPreds(List<T> items, Predicate<T> preds) {
+       return items.stream()
+               .filter(preds)
+               .findFirst();
     }
 }
