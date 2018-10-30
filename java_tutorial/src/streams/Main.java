@@ -1,10 +1,13 @@
 package streams;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import forkjoin.Timer;
+
+import java.util.Random;
+import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.generate;
 
 public class Main {
     private static final String[] WORDS = {
@@ -67,5 +70,33 @@ public class Main {
                         .filter(w -> w.contains("u"))
                         .count()
         );
+
+        final double[] doubles = new Random().doubles(10_000_000).toArray();
+
+        System.out.println("Serial");
+        Timer.time( () ->
+                System.out.format("SUM: %f%n",
+                    DoubleStream.of(doubles)
+                        .map(d -> d * d)
+                        .sum()
+                )
+        );
+        System.out.println("Parallel");
+        Timer.time( () ->
+                System.out.format("SUM: %f%n",
+                    DoubleStream.of(doubles)
+                        .parallel()
+                        .map(d -> d * d)
+                        .sum()
+                )
+        );
+
+        System.out.println(infiniteDoubles().limit(5).collect(toList()));
+        System.out.println(infiniteDoubles().limit(10).toArray());
     }
+
+    private static Stream<Double> infiniteDoubles() {
+        return Stream.generate(() -> new Random().nextDouble());
+    }
+
 }
