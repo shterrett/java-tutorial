@@ -1,5 +1,6 @@
 package streams;
 
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,10 +33,39 @@ public class Main {
         System.out.println(Stream.of(WORDS).filter(w -> w.length() % 2 == 0).collect(toList()));
 
         Stream.of(WORDS)
-            .map(String::toUpperCase)
-            .filter(w -> w.contains("E"))
-            .forEach(System.out::println);
+                .map(String::toUpperCase)
+                .filter(w -> w.contains("E"))
+                .forEach(System.out::println);
 
         System.out.println(Stream.of(WORDS).toArray(String[]::new));
+
+        System.out.println(
+                Stream.of(WORDS)
+                        .reduce("", (ws, w) -> ws + w.toUpperCase())
+        );
+
+        System.out.println(
+                Stream.of(WORDS)
+                        .map(String::toUpperCase)
+                        .reduce("", String::concat)
+        );
+
+        System.out.println(
+                Stream.of(WORDS)
+                        .reduce((ws, w) -> ws + ", " + w)
+                        .orElse("")
+        );
+
+        System.out.format("Total chars: %d%n",
+                Stream.of(WORDS)
+                        .map(String::length)
+                        .reduce(0, Integer::sum)
+        );
+
+        System.out.println(
+                Stream.of(WORDS)
+                        .filter(w -> w.contains("u"))
+                        .count()
+        );
     }
 }
