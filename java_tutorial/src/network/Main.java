@@ -13,5 +13,11 @@ public class Main {
 
        UrlExists googleNotFound = new UrlExists("google.com", "nothinghere");
        googleNotFound.connect();
+
+       // RandomNumberServer rns = new RandomNumberServer(12345);
+       // rns.listen();
+
+       SumServer ss = new SumServer(23456);
+       ss.listen();
     }
 }
